@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Rx System | Doctor Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(204, 251, 241, 0.6);
+        }
+        .soft-shadow { box-shadow: 0 10px 40px -10px rgba(20, 184, 166, 0.15); }
+        .print-only { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #printable-section, #printable-section * { visibility: visible; }
+            #printable-section { position: absolute; left: 0; top: 0; width: 100%; box-shadow: none; border: none; padding: 20px; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+        }
+    </style>
+</head>
+
+<body class="bg-[#f0fdfa] flex h-screen overflow-hidden text-slate-800">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-teal-900 border-r border-teal-800 hidden md:flex flex-col shadow-2xl no-print">
+        <div class="h-20 flex items-center px-7 border-b border-teal-800 bg-teal-900">
+            <span class="text-xl font-extrabold flex items-center gap-3 text-white">
+                <div class="bg-teal-500/20 p-2 rounded-xl border border-teal-400/30">
+                    <svg class="w-5 h-5 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                Doctor Panel
+            </span>
+        </div>
+        <nav class="flex-1 px-4 py-8 space-y-2">
+            <a href="/doctor/dashboard" class="flex items-center px-4 py-3 text-sm font-semibold rounded-xl text-teal-200 hover:bg-teal-800 hover:text-white transition-all">
+               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> Dashboard
+            </a>
+            <a href="/doctor/appointments" class="flex items-center px-4 py-3 text-sm font-bold rounded-xl bg-teal-700 text-white shadow border border-teal-600">
+               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> Appointments
+            </a>
+            <a href="/doctor/profile" class="flex items-center px-4 py-3 text-sm font-semibold rounded-xl text-teal-200 hover:bg-teal-800 hover:text-white transition-all">
+               <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg> Profile
+            </a>
+        </nav>
+        <div class="p-5 border-t border-teal-800">
+            <a href="/auth/logout" class="flex items-center justify-center px-4 py-3 text-sm font-bold rounded-xl text-white bg-red-500/10 hover:bg-red-500 border border-red-500/20 transition-all">
+                Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden w-full relative">
+        <div class="h-1.5 w-full bg-gradient-to-r from-teal-500 via-teal-400 to-teal-600 shadow-sm no-print"></div>
+
+        <header class="bg-white border-b border-teal-100 flex items-center justify-between px-8 py-5 shadow-[0_4px_20px_-10px_rgba(20,184,166,0.15)] shrink-0 no-print z-10">
+            <div class="flex items-center gap-4">
+                <a href="/doctor/appointments" class="text-slate-400 hover:text-teal-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h2 class="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-3">Active Consultation View</h2>
+            </div>
+            <div>
+                <% if (appointment.status==='completed' ) { %>
+                    <span class="bg-emerald-50 text-emerald-600 border border-emerald-200 font-extrabold text-[11px] px-3.5 py-1.5 rounded-full uppercase tracking-widest shadow-sm flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> COMPLETED
+                    </span>
+                <% } else { %>
+                    <span class="bg-amber-50 text-amber-600 border border-amber-200 font-extrabold text-[11px] px-3.5 py-1.5 rounded-full uppercase tracking-widest shadow-sm flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span> PENDING
+                    </span>
+                <% } %>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto w-full p-6 md:p-10 relative">
+            <div class="max-w-6xl mx-auto space-y-6" id="printable-section">
+                <!-- Data Blocks -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="glass-panel p-7 rounded-3xl soft-shadow col-span-1 lg:col-span-2">
+                        <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center border-b border-teal-50 pb-5 mb-5 gap-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-100 to-teal-50 flex items-center justify-center text-teal-600 font-black text-2xl border border-white shadow-sm">
+                                    <%= appointment.userId?.name ? appointment.userId.name.charAt(0).toUpperCase() : 'P' %>
+                                </div>
+                                <div>
+                                    <h1 class="text-2xl font-black text-slate-900 tracking-tight"><%= appointment.userId?.name || 'Unknown Patient' %></h1>
+                                    <p class="text-sm font-semibold text-teal-600/80 mt-0.5"><%= appointment.userId?.phoneNumber || 'No Contact Data' %></p>
+                                </div>
+                            </div>
+                            <div class="text-left md:text-right">
+                                <span class="bg-teal-50 text-teal-600 px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest border border-teal-100/50 inline-block mb-1">
+                                    <%= appointment.userId?.age || '--' %> Years • <%= appointment.userId?.gender || 'N/A' %>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-100">
+                                <span class="text-[10px] font-black text-teal-400 uppercase tracking-widest block mb-1">Registered Date</span>
+                                <span class="font-bold text-slate-800"><%= new Date(appointment.date).toLocaleDateString() %></span>
+                            </div>
+                            <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-100">
+                                <span class="text-[10px] font-black text-teal-400 uppercase tracking-widest block mb-1">Encounter Time</span>
+                                <span class="font-bold text-slate-800"><%= new Date(appointment.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></span>
+                            </div>
+                            <div class="bg-slate-50/70 p-4 rounded-2xl border border-slate-100 lg:col-span-2">
+                                <span class="text-[10px] font-black text-teal-400 uppercase tracking-widest block mb-1">Encounter Note</span>
+                                <span class="font-bold text-slate-800"><%= appointment.notes || 'Standard protocol verification check.' %></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-7 rounded-3xl soft-shadow">
+                        <h3 class="text-[10px] font-black text-teal-400 uppercase tracking-widest block mb-5 border-b border-teal-50 pb-2">Attending Provider</h3>
+                        <span class="font-black text-lg text-slate-900 block">Dr. <%= appointment.doctorId?.name %></span>
+                        <span class="inline-flex items-center px-3 py-1 mt-2 rounded-lg text-xs font-bold bg-teal-50 text-teal-600 border border-teal-100"><%= appointment.doctorId?.department %></span>
+                    </div>
+                </div>
+
+                <!-- Prescription Section -->
+                <div class="glass-panel rounded-3xl soft-shadow border border-teal-100 overflow-hidden mt-8">
+                    <div class="bg-gradient-to-r from-teal-50 to-white border-b border-teal-100 px-8 py-6 flex justify-between">
+                        <h2 class="text-2xl font-black">Clinical Rx System</h2>
+                        <button onclick="window.print()" class="no-print hidden sm:flex items-center border border-slate-200 hover:border-teal-300 hover:text-teal-600 px-5 py-2.5 rounded-xl font-bold text-sm bg-white shadow-sm transition">
+                            Print Prescription
+                        </button>
+                    </div>
+
+                    <div class="px-8 py-8 w-full border-b border-teal-50 print-only text-center my-6 hidden">
+                        <h1 class="text-3xl font-black text-slate-900 uppercase tracking-widest border-b-2 border-slate-200 pb-4 inline-block px-10">PRESCRIPTION REPORT</h1>
+                    </div>
+
+                    <!-- Input Form (No Print) -->
+                    <div class="px-8 py-8 no-print bg-slate-50/30">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-end">
+                            <div class="col-span-1 md:col-span-4">
+                                <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2">Medicine Name</label>
+                                <input type="text" id="rxName" placeholder="E.g. Amoxicillin 500mg" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 font-semibold text-slate-700 shadow-sm focus:ring-4 focus:ring-teal-500/10 outline-none">
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2">Dosage</label>
+                                <select id="rxDosage" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 font-semibold text-slate-700 shadow-sm focus:ring-4 focus:ring-teal-500/10 outline-none appearance-none">
+                                    <option value="" disabled selected>Select</option>
+                                    <option value="1-0-1">1-0-1</option>
+                                    <option value="1-1-1">1-1-1</option>
+                                    <option value="1-0-0">1-0-0</option>
+                                    <option value="0-0-1">0-0-1</option>
+                                    <option value="SOS">SOS</option>
+                                </select>
+                            </div>
+                            <div class="col-span-1 md:col-span-3">
+                                <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2">Timing</label>
+                                <select id="rxTiming" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 font-semibold text-slate-700 shadow-sm focus:ring-4 focus:ring-teal-500/10 outline-none appearance-none">
+                                    <option value="" disabled selected>Select Frequency</option>
+                                    <option value="Before Food">Before Food</option>
+                                    <option value="After Food">After Food</option>
+                                    <option value="With Food">With Food</option>
+                                    <option value="Empty Stomach">Empty Stomach</option>
+                                      <option value="Morning">Morning</option>
+                                     <option value="Mrng/ngt">Mrng/Ngt</option>
+                                      <option value="Night">Night</option>
+                                </select>
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2">Duration</label>
+                                <input type="text" id="rxDuration" placeholder="E.g. 5 Days" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 font-semibold text-slate-700 shadow-sm focus:ring-4 focus:ring-teal-500/10 outline-none">
+                            </div>
+                            <div class="col-span-1 md:col-span-1">
+                                <button type="button" onclick="addMedicine()" class="w-full h-[46px] bg-teal-100 hover:bg-teal-200 text-teal-700 border border-teal-200 rounded-xl flex items-center justify-center font-bold transition-all shadow-sm active:scale-95 group">
+                                    <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Master Real Form Submission -->
+                    <form action="/doctor/prescription/<%= appointment._id %>" method="POST" id="mainPrescriptionForm" class="block w-full">
+                        <input type="hidden" name="status" value="pending" id="statusHidden">
+                        
+                        <!-- Reactive Table Output -->
+                        <div class="overflow-x-auto border-t border-teal-100">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-teal-50/50 border-b border-teal-100 text-[10px] uppercase tracking-widest font-black text-teal-500">
+                                        <th class="px-8 py-4">Medicine Name</th>
+                                        <th class="px-6 py-4">Dosage</th>
+                                        <th class="px-6 py-4">Timing Logic</th>
+                                        <th class="px-6 py-4">Duration</th>
+                                        <th class="px-8 py-4 text-center no-print">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rxTableBody" class="divide-y divide-slate-100 bg-white">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Submit Action Bar -->
+                        <div class="bg-slate-50 border-t border-teal-100 px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4 no-print">
+                            <div>
+                                <label class="flex items-center cursor-pointer group">
+                                    <div class="relative flex items-center justify-center mr-3">
+                                        <input type="checkbox" name="status" value="completed" class="peer sr-only">
+                                        <div class="w-6 h-6 border-2 border-slate-300 rounded-md bg-white peer-checked:bg-teal-600 peer-checked:border-teal-600 transition-all flex items-center justify-center shadow-sm">
+                                            <svg class="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                        </div>
+                                    </div>
+                                    <span class="text-sm font-black text-slate-600 group-hover:text-teal-600 select-none transition-colors">Mark Consultation as Completed</span>
+                                </label>
+                            </div> 
+                            <div class="w-full sm:w-auto">
+                                <button type="submit" class="w-full sm:w-auto bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white px-10 py-3.5 rounded-xl font-bold tracking-wide shadow-lg shadow-teal-500/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                                    Save Prescription
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="px-8 py-5 bg-white border-t border-slate-100 text-center flex flex-col md:flex-row md:justify-between items-center gap-2">
+                            <span class="text-[11px] font-bold text-slate-400 capitalize tracking-widest print-only">Prescription dated: <%= new Date().toLocaleString() %></span>
+                            <span class="text-[11px] font-bold text-slate-400 capitalize tracking-widest no-print">System Session Identity Tracker • <%= new Date().toLocaleTimeString() %></span>
+                        </div>
+                        <div id="hiddenPostContainer" style="display:none;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main> 
+
+    <script>
+        document.querySelector('input[type="checkbox"][name="status"]').addEventListener('change', function (e) {
+            document.getElementById('statusHidden').disabled = e.target.checked;
+        });
+
+        let rawMeds = <%-JSON.stringify(appointment.medicines || []) %> ;
+        let rxList = rawMeds.map(m => ({
+            name: m.name || '',
+            dosage: m.dosage || '',
+            timing: m.instructions || m.timing || '',
+            duration: m.duration || ''
+        }));
+
+        function renderTable() {
+            const tbody = document.getElementById('rxTableBody');
+            const hiddenBox = document.getElementById('hiddenPostContainer');
+            
+            tbody.innerHTML = '';
+            hiddenBox.innerHTML = '';
+
+            if (rxList.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="no-print">
+                        <td colspan="5" class="px-8 py-10 text-center">
+                            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-50 mb-3 border border-slate-100">
+                                <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                            </div>
+                            <p class="text-sm font-bold text-slate-400">No medical routines actively mapped.</p>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            rxList.forEach((med, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-teal-50/30 transition-colors group";
+                tr.innerHTML = `
+                    <td class="px-8 py-5"><span class="font-bold text-slate-800 block">${med.name}</span></td>
+                    <td class="px-6 py-5"><span class="font-bold text-slate-600 bg-slate-50 border border-slate-100 px-3 py-1 rounded-lg text-xs">${med.dosage}</span></td>
+                    <td class="px-6 py-5"><span class="font-semibold text-slate-500 text-sm">${med.timing || 'Standard Logic'}</span></td>
+                    <td class="px-6 py-5"><span class="font-bold text-slate-700 text-sm">${med.duration}</span></td>
+                    <td class="px-8 py-5 text-center no-print flex items-center justify-center gap-2">
+                        <button type="button" onclick="editMedicine(${index})" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-500 hover:text-white transition-colors border border-blue-100 shadow-sm" title="Edit">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </button>
+                        <button type="button" onclick="deleteMedicine(${index})" class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors border border-red-100 shadow-sm" title="Delete">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+
+                hiddenBox.innerHTML += `
+                    <input type="hidden" name="medicines[${index}][name]" value="${med.name.replace(/"/g, '&quot;')}">
+                    <input type="hidden" name="medicines[${index}][dosage]" value="${med.dosage.replace(/"/g, '&quot;')}">
+                    <input type="hidden" name="medicines[${index}][instructions]" value="${med.timing.replace(/"/g, '&quot;')}">
+                    <input type="hidden" name="medicines[${index}][duration]" value="${med.duration.replace(/"/g, '&quot;')}">
+                `;
+            });
+        }
+
+        let isEditing = -1;
+
+        function addMedicine() {
+            const nameEl = document.getElementById('rxName'), dosEl = document.getElementById('rxDosage');
+            const timEl = document.getElementById('rxTiming'), durEl = document.getElementById('rxDuration');
+
+            const name = nameEl.value.trim(), dosage = dosEl.value, timing = timEl.value, duration = durEl.value.trim();
+
+            if (!name || !dosage || !timing || !duration) {
+                alert('Please explicitly specify medicine details before appending.');
+                return;
+            }
+
+            const item = { name, dosage, timing, duration };
+            if (isEditing > -1) { rxList[isEditing] = item; isEditing = -1; } else { rxList.push(item); }
+
+            nameEl.value = ''; dosEl.value = ''; timEl.value = ''; durEl.value = '';
+            renderTable();
+        }
+
+        function deleteMedicine(idx) {
+            rxList.splice(idx, 1);
+            if (isEditing === idx) isEditing = -1;
+            renderTable();
+        }
+
+        function editMedicine(idx) {
+            const med = rxList[idx];
+            document.getElementById('rxName').value = med.name;
+            document.getElementById('rxDosage').value = med.dosage;
+            document.getElementById('rxTiming').value = med.timing;
+            document.getElementById('rxDuration').value = med.duration;
+            isEditing = idx;
+        }
+
+        renderTable();
+
+        window.addEventListener('keydown', function (e) {
+            if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
+                if (e.target.nodeName == 'INPUT' && e.target.type == 'text') { e.preventDefault(); return false; }
+            }
+        }, true);
+    </script>
+</body>
+</html>

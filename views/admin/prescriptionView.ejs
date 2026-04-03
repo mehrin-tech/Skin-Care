@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Patient Prescription View</title>
+    <!-- Tailwind CSS for robust styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Clean white/light gray background */
+        }
+        
+        /* Stylish medical look for Rx */
+        .rx-symbol {
+            font-family: 'Merriweather', serif;
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1;
+            font-style: italic;
+            padding-right: 0.5rem;
+        }
+
+        /* Print Styles */
+        @media print {
+            body { 
+                background-color: white !important; 
+                padding: 0 !important;
+            }
+            .no-print { 
+                display: none !important; 
+            }
+            .print-container {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            /* Hide URL printing natively */
+            @page { size: auto;  margin: 10mm; }
+        }
+    </style>
+</head>
+<body class="py-10 px-4 sm:px-6">
+
+    <!-- Centered Content Container -->
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Top Navigation -->
+        <div class="flex justify-between items-center mb-8 no-print">
+            <!-- Back Button -->
+            <a href="/admin/patients" class="flex items-center text-slate-500 hover:text-slate-800 font-bold transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                ← Back to Patients
+            </a>
+            
+            <!-- Print Button -->
+            <button onclick="window.print()" class="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all">
+                <svg class="w-5 h-5 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Print Prescription
+            </button>
+        </div>
+
+        <!-- Main Document Border -->
+        <div class="bg-white rounded-[2rem] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.06)] border border-slate-100 overflow-hidden print-container">
+            
+            <!-- Optional Aesthetic Top Bar -->
+            <div class="h-2 w-full bg-slate-800"></div>
+
+            <div class="p-8 sm:p-14">
+                
+                <div class="text-center mb-10 pb-10 border-b border-slate-100 hidden print:block">
+                    <h1 class="text-2xl font-black uppercase tracking-widest text-slate-800">Official Clinical Record</h1>
+                </div>
+
+                <!-- Two Info Cards (Side-by-side) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    
+                    <!-- A. Patient Details Card -->
+                    <div class="bg-slate-50/50 border border-slate-200 rounded-2xl p-7 shadow-sm">
+                        <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-5">Patient Details</h2>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex justify-between border-b border-slate-100 pb-2">
+                                <span class="font-bold text-slate-500">Name</span>
+                                <span class="font-black text-slate-800 text-right"><%= patient.name || 'N/A' %></span>
+                            </li>
+                            <li class="flex justify-between border-b border-slate-100 pb-2">
+                                <span class="font-bold text-slate-500">Mobile</span>
+                                <span class="font-black text-slate-800 text-right"><%= patient.mobile || 'N/A' %></span>
+                            </li>
+                            <li class="flex justify-between border-b border-slate-100 pb-2">
+                                <span class="font-bold text-slate-500">Age & Gender</span>
+                                <span class="font-black text-slate-800 text-right"><%= patient.age || '--' %> y.o • <%= patient.gender || 'N/A' %></span>
+                            </li>
+                            <li class="flex justify-between border-b border-transparent pb-0">
+                                <span class="font-bold text-slate-500">Place</span>
+                                <span class="font-black text-slate-800 text-right"><%= patient.place || 'N/A' %></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- B. Consultation Details Card -->
+                    <div class="bg-slate-50/50 border border-slate-200 rounded-2xl p-7 shadow-sm">
+                        <h2 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-5">Consultation Details</h2>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex justify-between border-b border-slate-100 pb-2">
+                                <span class="font-bold text-slate-500">Doctor Name</span>
+                                <span class="font-black text-slate-800 text-right">Dr. <%= consultation.doctorName || 'N/A' %></span>
+                            </li>
+                            <li class="flex justify-between border-b border-slate-100 pb-2">
+                                <span class="font-bold text-slate-500">Department</span>
+                                <span class="font-black text-slate-800 text-right"><%= consultation.department || 'N/A' %></span>
+                            </li>
+                            <li class="flex justify-between border-b border-transparent pb-0">
+                                <span class="font-bold text-slate-500">Date</span>
+                                <span class="font-black text-slate-800 text-right"><%= new Date(consultation.date).toLocaleDateString() %></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Prescription Section -->
+                <div class="mb-16 min-h-[300px]">
+                    <!-- Stylish Medical Rx Header -->
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="rx-symbol">Rx</span>
+                        <div class="h-px bg-slate-300 flex-1 mt-4"></div>
+                    </div>
+
+                    <div class="pl-4 sm:pl-8">
+                        <!-- Condition Rendering -->
+                        <% if (prescription && prescription.medicines && prescription.medicines.length > 0) { %>
+                            <ul class="space-y-5">
+                                <!-- Loop through medicines -->
+                                <% prescription.medicines.forEach((med, index) => { %>
+                                    <li class="text-slate-800 text-base flex items-start group">
+                                        <span class="text-slate-400 mr-4 mt-0.5 font-black text-lg group-hover:text-indigo-500 transition-colors">•</span>
+                                        <div class="font-medium tracking-wide">
+                                            <span class="font-black text-slate-900"><%= med.name %></span> 
+                                            <span class="text-slate-300 mx-1.5">|</span> 
+                                            <span class="text-slate-600"><%= med.dosage %></span> 
+                                            <span class="text-slate-300 mx-1.5">|</span> 
+                                            <span class="text-slate-600"><%= med.instructions %></span> 
+                                            <span class="text-slate-300 mx-1.5">|</span> 
+                                            <span class="text-slate-600"><%= med.duration %></span>
+                                        </div>
+                                    </li>
+                                <% }) %>
+                            </ul>
+                        <% } else { %>
+                            <div class="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
+                                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
+                                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                                </div>
+                                <p class="text-slate-500 italic font-medium">"No medications prescribed during this session."</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Footer Section -->
+                <div class="mt-20 pt-10 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-end">
+                    
+                    <div class="mb-10 sm:mb-0">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-loose">
+                            Prescription dated:<br>
+                            <span class="text-slate-800 text-sm normal-case font-bold block mt-1"><%= consultation.date ? new Date(consultation.date).toLocaleString() : new Date().toLocaleString() %></span>
+                        </p>
+                    </div>
+                    
+                    <!-- Doctor Signature Area -->
+                    <div class="text-center w-56 relative">
+                        <div class="h-24 flex items-end justify-center mb-1 relative z-10">
+                            <span class="text-slate-300 italic text-sm font-serif select-none">Sign Here</span>
+                        </div>
+                        <div class="h-px bg-slate-300 w-full mb-3 absolute bottom-12"></div>
+                        <div class="pt-3">
+                            <p class="text-slate-900 font-black text-sm tracking-tight">Dr. <%= consultation.doctorName || 'Authorized Physician' %></p>
+                            <p class="text-slate-500 text-xs font-bold mt-0.5 uppercase tracking-widest"><%= consultation.department %></p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

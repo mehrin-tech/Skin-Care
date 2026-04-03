@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#f0fdfa] flex items-center justify-center min-h-screen p-4 md:p-8 text-slate-800">
+  <a href="/dashboard" class="absolute top-4 left-4 text-white hover:text-teal-100 flex items-center gap-1.5 font-bold bg-black/20 hover:bg-black/30 px-3 py-1.5 rounded-lg backdrop-blur-md transition-all shadow-sm text-xs">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Dashboard
+            </a>
+    <div class="max-w-lg w-full bg-white rounded-2xl shadow-[0_10px_30px_-10px_rgba(20,184,166,0.12)] overflow-hidden border border-teal-100/60 relative group">
+        
+        <!-- Header Banner -->
+        <div class="h-28 bg-gradient-to-r from-teal-600 via-teal-500 to-teal-400 relative">
+         
+            <!-- Subtle Overlay -->
+            <div class="absolute inset-0 bg-white/5 mix-blend-overlay"></div>
+        </div>
+        
+        <!-- Profile Content -->
+        <div class="px-6 pb-6 relative">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-4 gap-3">
+                <!-- Avatar -->
+                <div class="w-20 h-20 bg-white rounded-full p-1.5 -mt-10 shadow-lg shadow-teal-500/10 relative z-10 shrink-0 transform transition-transform group-hover:scale-105 mx-auto sm:mx-0">
+                    <img src="<%= user.profileImage || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=14b8a6&color=fff' %>" alt="Profile Vector" class="w-full h-full rounded-full object-cover border border-teal-50 relative z-20">
+                    <div class="absolute inset-1.5 bg-teal-50 animate-pulse rounded-full z-10"></div>
+                </div> 
+
+                <!-- Edit Button -->
+                <a href="/profile/edit" class="bg-white border border-slate-200 hover:border-teal-300 hover:bg-teal-50 text-teal-700 font-bold px-4 py-2 rounded-lg text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1.5 mx-auto sm:mx-0 w-full sm:w-auto">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    Edit Profile
+                </a>
+            </div>
+
+            <% if (locals.success) { %>
+                <div class="bg-emerald-50 text-emerald-700 px-4 py-2.5 rounded-lg mb-4 font-bold text-xs border border-emerald-200 flex items-center gap-2 shadow-sm">
+                    <div class="bg-emerald-200 text-emerald-800 rounded-full p-0.5 drop-shadow-sm">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    Profile updated successfully!
+                </div>
+            <% } %>
+
+            <!-- Name and Role -->
+            <div class="text-center sm:text-left mb-6">
+                <h2 class="text-2xl font-black text-slate-900 tracking-tight capitalize"><%= user.name %></h2>
+                <div class="flex items-center justify-center sm:justify-start gap-1.5 mt-1">
+                    <span class="w-2 h-2 rounded-full <%= user.role === 'admin' ? 'bg-red-500' : 'bg-teal-500' %> shadow-sm"></span>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest"><%= user.role %> </p>
+                </div>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 hover:bg-white hover:shadow-sm hover:border-teal-200 transition flex flex-col justify-center">
+                    <p class="text-[9px] font-black text-teal-600 uppercase tracking-widest mb-1">Email</p>
+                    <p class="text-sm text-slate-800 font-semibold truncate" title="<%= user.email %>"><%= user.email %></p>
+                </div>
+                
+                <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 hover:bg-white hover:shadow-sm hover:border-teal-200 transition flex flex-col justify-center">
+                    <p class="text-[9px] font-black text-teal-600 uppercase tracking-widest mb-1">Mobile</p>
+                    <p class="text-sm text-slate-800 font-semibold"><%= user.phoneNumber || 'Not Provided' %></p>
+                </div>
+                
+                <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 hover:bg-white hover:shadow-sm hover:border-teal-200 transition flex flex-col justify-center">
+                    <p class="text-[9px] font-black text-teal-600 uppercase tracking-widest mb-1">Age</p>
+                    <p class="text-sm text-slate-800 font-semibold"><%= user.age ? `${user.age} Years` : 'Not Provided' %></p>
+                </div>
+                
+                <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100 hover:bg-white hover:shadow-sm hover:border-teal-200 transition flex flex-col justify-center">
+                    <p class="text-[9px] font-black text-teal-600 uppercase tracking-widest mb-1">Gender</p>
+                    <p class="text-sm text-slate-800 font-semibold"><%= user.gender || 'Not Provided' %></p>
+                </div>
+                
+                <div class="bg-teal-50/50 rounded-xl p-3.5 border border-teal-100 sm:col-span-2 hover:bg-teal-50 hover:shadow-sm transition">
+                    <p class="text-[9px] font-black text-teal-600 uppercase tracking-widest mb-1">Location</p>
+                    <p class="text-sm text-slate-900 font-bold"><%= user.place || 'Not Provided' %></p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

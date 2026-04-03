@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-slate-800 flex h-screen overflow-hidden">
+    
+    <!-- Left Sidebar -->
+    <aside class="w-64 bg-teal-900 border-r border-teal-800 hidden md:flex flex-col flex-shrink-0 text-white">
+        <div class="h-16 flex items-center px-6 border-b border-teal-800 bg-teal-950 relative z-10">
+            <span class="text-lg font-semibold tracking-wide flex items-center gap-3">
+                <div class="bg-teal-700/50 p-1.5 rounded border border-teal-600/50">
+                    <svg class="w-5 h-5 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                Admin Dashboard
+            </span>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="/admin/dashboard" class="flex items-center px-4 py-3 text-sm font-medium rounded text-teal-100 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Dashboard
+            </a>
+            <a href="/admin/patients" class="flex items-center px-4 py-3 text-sm font-medium rounded bg-teal-700 text-white transition hover:bg-teal-600">
+                <svg class="w-5 h-5 mr-3 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                Patients
+            </a>
+            <a href="/admin/doctors" class="flex items-center px-4 py-3 text-sm font-medium rounded text-teal-100 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                Doctors
+            </a>
+            <a href="/admin/appointments" class="flex items-center px-4 py-3 text-sm font-medium rounded text-teal-100 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                Appointments
+            </a>
+        </nav>
+        <div class="p-4 border-t border-teal-800">
+            <a href="/auth/logout" class="flex items-center px-4 py-3 text-sm font-medium rounded text-red-200 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Sign out
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-50">
+        <!-- Top Navbar -->
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 sticky top-0 z-20">
+            <h2 class="text-xl font-medium text-slate-800">Patient Management</h2>
+            <div class="flex items-center gap-4">
+                <div class="h-8 w-8 rounded bg-teal-100 flex items-center justify-center text-teal-700 font-bold border border-teal-200">
+                    <%= user && user.name ? user.name.charAt(0) : 'A' %>
+                </div>
+                <div class="hidden sm:flex flex-col">
+                     <span class="text-sm font-medium text-slate-800"><%= user && user.name ? user.name : 'Admin' %></span>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-4 md:p-8 space-y-6">
+            <div class="bg-white rounded border border-gray-200 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-gray-200 text-slate-600 text-sm">
+                        <tr>
+                            <th class="px-6 py-3.5 font-medium">Serial No</th>
+                            <th class="px-6 py-3.5 font-medium">Patient Name</th>
+                            <th class="px-6 py-3.5 font-medium">Mobile Number</th>
+                            <th class="px-6 py-3.5 font-medium">Age</th>
+                            <th class="px-6 py-3.5 font-medium text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        <% if(!patients || patients.length === 0) { %>
+                            <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No patients found.</td></tr>
+                        <% } else { %>
+                            <% patients.forEach((p, index) => { %>
+                                <tr class="hover:bg-slate-50 transition-colors bg-white">
+                                    <td class="px-6 py-4 text-slate-500"><%= p.tokenNumber || (index + 1) %></td>
+                                    <td class="px-6 py-4 font-medium text-slate-800"><%= p.userId?.name || 'N/A' %></td>
+                                    <td class="px-6 py-4 text-slate-600"><%= p.userId?.phoneNumber || 'N/A' %></td>
+                                    <td class="px-6 py-4 text-slate-600"><%= p.userId?.age || 'N/A' %></td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="/admin/patients/<%= p._id %>" class="inline-block bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded text-xs font-medium transition shadow-sm border border-transparent hover:border-teal-800">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

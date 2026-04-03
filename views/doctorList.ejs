@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">Doctor Directory</h1>
+                <p class="text-slate-500 mt-1">Welcome, <strong><%= user.name %></strong>! (<%= user.role %>)</p>
+            </div>
+            <% if (user.role === 'admin') { %>
+                <a href="/doctors/add" class="mt-4 sm:mt-0 inline-flex items-center px-5 py-2.5 bg-teal-600 text-white hover:bg-teal-700 font-medium rounded-lg shadow-sm transition duration-150">
+                    + Add New Doctor
+                </a>
+            <% } %>
+        </div>
+
+        <!-- Filter Bar -->
+        <form action="/doctors" method="GET" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-8 flex flex-col md:flex-row gap-4 items-center">
+            <div class="w-full md:flex-1">
+                <input type="text" name="search" placeholder="Search by name..." value="<%= search %>" 
+                    class="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+            </div>
+            <div class="w-full md:w-auto">
+                <select name="department" class="w-full md:w-48 px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none bg-white">
+                    <option value="">All Departments</option>
+                    <option value="Hair" <%= department === 'Hair' ? 'selected' : '' %>>Hair</option>
+                    <option value="Skin" <%= department === 'Skin' ? 'selected' : '' %>>Skin</option>
+                    <option value="Dentistry" <%= department === 'Dentistry' ? 'selected' : '' %>>Dentistry</option>
+                </select>
+            </div>
+            <div class="flex w-full md:w-auto gap-2">
+                <button type="submit" class="w-full md:w-auto px-6 py-2 bg-slate-800 text-white font-medium rounded-lg hover:bg-slate-900 transition shadow-sm">Filter</button>
+                <a href="/doctors" class="w-full md:w-auto px-6 py-2 bg-slate-100 text-slate-700 font-medium rounded-lg hover:bg-slate-200 transition text-center shadow-sm">Reset</a>
+            </div>
+        </form>
+
+        <!-- Dynamic Grid Layout -->
+        <% if (doctors.length > 0) { %>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <% doctors.forEach(doctor => { %>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="h-12 w-12 rounded-full bg-teal-50 flex items-center justify-center text-xl shrink-0">
+                                👨‍⚕️
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                                <%= doctor.department %>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-1"><%= doctor.name %></h3>
+                        <p class="text-sm text-slate-500 mb-4"><%= doctor.experience %> Years Experience</p>
+                        
+                        <div class="mt-auto">
+                            <% if (user.role === 'admin') { %>
+                                <form action="/doctors/delete/<%= doctor._id %>" method="POST" class="mt-4 border-t border-slate-100 pt-4">
+                                    <button type="submit" class="w-full px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 font-medium rounded-lg transition">
+                                        Remove Doctor
+                                    </button>
+                                </form>
+                            <% } else { %>
+                                <div class="mt-4 border-t border-slate-100 pt-4">
+                                    <a href="/appointments/book?doctorId=<%= doctor._id %>" class="block text-center w-full px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 font-medium rounded-lg transition">
+                                        Book Appointment
+                                    </a>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-12 text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
+                    <span class="text-2xl text-slate-400">⚕️</span>
+                </div>
+                <h3 class="text-lg font-medium text-slate-800 mb-1">No doctors found</h3>
+                <p class="text-slate-500">Try adjusting your filters or check back later.</p>
+            </div>
+        <% } %>
+
+        <!-- Pagination Controls -->
+        <% if (totalPages > 1) { %>
+            <div class="flex justify-center items-center space-x-4 mb-8">
+                <% if (currentPage > 1) { %>
+                    <a href="/doctors?search=<%= search %>&department=<%= department %>&page=<%= currentPage - 1 %>" 
+                        class="px-4 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition shadow-sm font-medium">&laquo; Previous</a>
+                <% } else { %>
+                    <span class="px-4 py-2 border border-slate-100 bg-slate-50 text-slate-400 rounded-lg cursor-not-allowed font-medium">&laquo; Previous</span>
+                <% } %>
+                
+                <span class="text-sm font-medium text-slate-700">Page <%= currentPage %> of <%= totalPages %></span>
+
+                <% if (currentPage < totalPages) { %>
+                    <a href="/doctors?search=<%= search %>&department=<%= department %>&page=<%= currentPage + 1 %>" 
+                        class="px-4 py-2 border border-slate-200 bg-white text-slate-700 rounded-lg hover:bg-slate-50 transition shadow-sm font-medium">Next &raquo;</a>
+                <% } else { %>
+                    <span class="px-4 py-2 border border-slate-100 bg-slate-50 text-slate-400 rounded-lg cursor-not-allowed font-medium">Next &raquo;</span>
+                <% } %>
+            </div>
+        <% } %>
+        
+        <div class="text-center">
+            <a href="<%= user.role === 'admin' ? '/admin/dashboard' : '/dashboard' %>" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-800 transition">
+                <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Return to Dashboard
+            </a>
+        </div>
+    </div>
+</body>
+</html>

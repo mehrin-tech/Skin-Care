@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-slate-800 flex h-screen overflow-hidden">
+
+    <!-- Left Sidebar Navigation -->
+    <aside class="w-64 bg-teal-900 border-r border-teal-800 hidden md:flex flex-col flex-shrink-0 text-white">
+        <div class="h-16 flex items-center px-6 border-b border-teal-800 bg-teal-950 relative z-10">
+            <span class="text-lg font-semibold tracking-wide flex items-center gap-3">
+                <div class="bg-teal-700/50 p-1.5 rounded border border-teal-600/50">
+                    <svg class="w-5 h-5 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                </div>
+                Admin Dashboard
+            </span>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="/admin/dashboard" class="flex items-center px-4 py-3 text-sm font-medium rounded bg-teal-700 text-white transition hover:bg-teal-600">
+                <svg class="w-5 h-5 mr-3 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Dashboard
+            </a>
+            <a href="/admin/patients" class="flex items-center px-4 py-3 text-sm font-medium rounded text-teal-100 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                Patients
+            </a>
+            <a href="/admin/doctors" class="flex items-center px-4 py-3 text-sm font-medium rounded text-teal-100 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                Doctors
+            </a>
+            <a href="/admin/appointments" class="flex items-center px-4 py-3 text-sm font-medium rounded text-teal-100 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                Appointments
+            </a>
+            <!-- <a href="#" class="flex items-center px-4 py-3 text-sm font-medium rounded text-teal-100 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3 text-teal-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Reports
+            </a> -->
+        </nav>
+        <div class="p-4 border-t border-teal-800">
+            <a href="/auth/logout" class="flex items-center px-4 py-3 text-sm font-medium rounded text-red-200 hover:bg-teal-800 hover:text-white transition">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Sign out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-50">
+        
+        <!-- Top Navbar -->
+        <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 lg:px-10 sticky top-0 z-20">
+            <!-- Mobile Menu Toggles / Titles -->
+            <div class="flex items-center">
+                <span class="md:hidden text-lg font-medium text-teal-900 mr-4">Skincare Admin</span>
+                <div class="hidden sm:flex flex-col">
+                    <h2 class="text-lg font-medium text-slate-800">Welcome back, <%= user && user.name ? user.name : 'Admin' %></h2>
+                    <span class="text-xs font-medium text-slate-500 uppercase tracking-wide">Workspace Overview</span>
+                </div>
+            </div>
+
+            <!-- Profile Actions -->
+            <div class="flex items-center gap-4">
+                <div class="h-8 w-8 rounded bg-teal-100 flex items-center justify-center text-teal-700 font-bold border border-teal-200 relative">
+                    <%= user && user.name ? user.name.charAt(0) : 'A' %>
+                </div>
+                <div class="h-6 w-px bg-gray-200 hidden sm:block"></div>
+                <form action="/auth/logout" method="GET" class="m-0">
+                    <button type="submit" class="text-sm font-medium text-gray-500 hover:text-red-600 transition flex items-center gap-2">
+                        <span class="hidden sm:inline">Logout</span>
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        <div class="w-full p-4 md:p-8 space-y-6">
+
+            <!-- Mobile Navigation Quick Links -->
+            <div class="md:hidden flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+                <a href="/admin/dashboard" class="whitespace-nowrap px-4 py-1.5 bg-teal-50 border border-teal-200 rounded text-teal-700 text-sm font-medium">Dashboard</a>
+                <a href="#" class="whitespace-nowrap px-4 py-1.5 bg-white rounded border border-gray-200 text-sm font-medium text-gray-600">Users</a>
+                <a href="/doctors" class="whitespace-nowrap px-4 py-1.5 bg-white rounded border border-gray-200 text-sm font-medium text-gray-600">Doctors</a>
+                <a href="/appointments" class="whitespace-nowrap px-4 py-1.5 bg-white rounded border border-gray-200 text-sm font-medium text-gray-600">Appointments</a>
+            </div>
+
+            <!-- Global Interactive Metrics Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Users Card -->
+                <a href="/admin/patients" class="bg-white rounded p-6 border border-gray-200 flex flex-col hover:shadow-md hover:border-teal-300 transition-all cursor-pointer group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-1 group-hover:text-teal-700 transition-colors">Registered Users</h3>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-medium text-gray-800"><%= stats.users %></span>
+                                <span class="text-xs font-medium text-teal-600">
+                                    +<%= stats.usersThisWeek %> this week
+                                </span>
+                            </div>
+                        </div>
+                        <div class="h-10 w-10 bg-slate-50 text-slate-600 rounded flex items-center justify-center border border-slate-200 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-200 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Doctors Card -->
+                <a href="/admin/doctors" class="bg-white rounded p-6 border border-gray-200 flex flex-col hover:shadow-md hover:border-teal-300 transition-all cursor-pointer group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-1 group-hover:text-teal-700 transition-colors">Active Doctors</h3>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-medium text-gray-800"><%= stats.doctors %></span>
+                                <span class="text-xs font-medium text-gray-400">Total verified</span>
+                            </div>
+                        </div>
+                        <div class="h-10 w-10 bg-slate-50 text-slate-600 rounded flex items-center justify-center border border-slate-200 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-200 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Appointments Card -->
+                <a href="/admin/appointments" class="bg-white rounded p-6 border border-gray-200 flex flex-col hover:shadow-md hover:border-teal-300 transition-all cursor-pointer group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500 mb-1 group-hover:text-teal-700 transition-colors">Appointments</h3>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-medium text-gray-800"><%= stats.appointments %></span>
+                                <span class="text-xs font-medium text-teal-600">
+                                    +<%= stats.appointmentsToday %> today
+                                </span>
+                            </div>
+                        </div>
+                        <div class="h-10 w-10 bg-slate-50 text-slate-600 rounded flex items-center justify-center border border-slate-200 group-hover:bg-teal-50 group-hover:text-teal-600 group-hover:border-teal-200 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Chart.js Graph Rendering Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-medium text-gray-800">Appointments (Past 7 Days)</h3>
+                    </div>
+                    <div class="relative h-[300px] w-full">
+                        <canvas id="appointmentsChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded p-6 border border-gray-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-medium text-gray-800">User Growth Dynamics</h3>
+                    </div>
+                    <div class="relative h-[300px] w-full">
+                        <canvas id="usersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Injecting Data from Server & Starting Chart.js -->
+    <script>
+        const chartData = <%- JSON.stringify(chartData) %>;
+
+        // Shared Tooltip Configuration
+        const chartTooltipConfig = {
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            titleColor: '#1e293b',
+            bodyColor: '#475569',
+            padding: 12,
+            cornerRadius: 4,
+            titleFont: { size: 13, family: "'Inter', sans-serif", weight: '500' },
+            bodyFont: { size: 13, family: "'Inter', sans-serif" },
+            displayColors: false,
+            borderColor: '#e2e8f0',
+            borderWidth: 1
+        };
+
+        // Shared Scale Configuration
+        const chartScalesConfig = {
+            x: { 
+                grid: { display: false },
+                ticks: { font: { family: "'Inter', sans-serif", size: 11 }, color: '#64748b' }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1, precision: 0, font: { family: "'Inter', sans-serif", size: 11 }, color: '#64748b' },
+                grid: { borderDash: [4, 4], color: '#f1f5f9', drawBorder: false }
+            }
+        };
+
+        // Appointments Line Chart
+        const apptCtx = document.getElementById('appointmentsChart').getContext('2d');
+
+        new Chart(apptCtx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Bookings',
+                    data: chartData.appointments,
+                    borderColor: '#0d9488', // teal-600
+                    backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true,
+                    pointBackgroundColor: '#0d9488',
+                    pointBorderColor: '#fff',
+                    pointRadius: 3,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: chartTooltipConfig
+                },
+                scales: { ...chartScalesConfig }
+            }
+        });
+
+        // Users Bar Chart
+        const userCtx = document.getElementById('usersChart').getContext('2d');
+        new Chart(userCtx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'New Users',
+                    data: chartData.users,
+                    backgroundColor: '#cbd5e1', // slate-400
+                    borderRadius: 2,
+                    hoverBackgroundColor: '#94a3b8' // slate-500
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: chartTooltipConfig
+                },
+                scales: { ...chartScalesConfig }
+            }
+        });
+    </script>
+</body>
+</html>

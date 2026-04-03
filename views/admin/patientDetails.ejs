@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Optimizing for clean printing constraints */
+        @media print {
+            body { background: white !important; }
+            .no-print { display: none !important; }
+            .print-border { border: 1px solid #e5e7eb !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 flex flex-col h-screen overflow-hidden">
+    
+    <!-- Top Administrative Navigation (Hidden during print) -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center px-6 no-print flex-shrink-0">
+        <a href="/admin/patients" class="text-blue-600 hover:text-blue-800 flex items-center gap-2 font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Patients
+        </a>
+        <div class="ml-auto flex items-center gap-4">
+            <button onclick="window.print()" class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded shadow text-sm font-medium flex items-center gap-2 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Print Prescription
+            </button>
+        </div>
+    </header>
+
+    <!-- Scrollable Central Display -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-8 flex justify-center bg-gray-100">
+        
+        <!-- Document Sheet Core Container -->
+        <div class="bg-white rounded-lg shadow-lg max-w-3xl w-full p-8 md:p-12 print-border min-h-max flex flex-col relative">
+            
+            <!-- Prescription Header -->
+            <div class="flex justify-between items-start border-b-2 border-indigo-600 pb-6">
+                <div class="flex items-center gap-4">
+                    <!-- Clinic Logo Placeholder -->
+                    <div class="w-14 h-14 bg-indigo-100 text-indigo-700 flex items-center justify-center rounded-lg shadow-sm border border-indigo-200">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-gray-900 tracking-tight">SkinCare Clinic</h1>
+                        <p class="text-gray-500 text-sm mt-0.5 font-medium">123 Healthway Avenue, Medical District</p>
+                        <p class="text-gray-400 text-xs">Ph: (555) 123-4567 | skinCare.local</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <h2 class="text-xl font-bold text-indigo-800 uppercase tracking-widest">Prescription</h2>
+                    <p class="text-gray-500 font-mono text-sm mt-1">Ref TCK-<%= record.tokenNumber || 'XX' %></p>
+                </div>
+            </div>
+
+            <!-- Double Column Demographics -->
+            <div class="flex flex-col md:flex-row gap-8 py-6 border-b border-gray-200">
+                <!-- Patient Demographics Section -->
+                <div class="flex-1 bg-gray-50 rounded-lg p-5 border border-gray-100">
+                    <h3 class="text-xs uppercase font-bold text-gray-400 mb-4 tracking-wider">Patient Details</h3>
+                    <div class="grid grid-cols-2 gap-y-3 gap-x-2 text-sm">
+                        <div class="text-gray-500">Name:</div>
+                        <div class="font-bold text-gray-900"><%= record.userId?.name || 'N/A' %></div>
+                        
+                        <div class="text-gray-500">Mobile:</div>
+                        <div class="font-bold text-gray-800"><%= record.userId?.phoneNumber || 'N/A' %></div>
+                        
+                        <div class="text-gray-500">Age & Gender:</div>
+                        <div class="font-bold text-gray-800"><%= record.userId?.age || 'N/A' %> <span class="text-gray-400 mx-1">|</span> <%= record.userId?.gender || 'N/A' %></div>
+                        
+                        <div class="text-gray-500">Place:</div>
+                        <div class="font-bold text-gray-800"><%= record.userId?.place || 'N/A' %></div>
+                    </div>
+                </div>
+
+                <!-- Consultation Information Section -->
+                <div class="flex-1 bg-blue-50/30 rounded-lg p-5 border border-blue-50/50">
+                    <h3 class="text-xs uppercase font-bold text-blue-400 mb-4 tracking-wider">Consultation Details</h3>
+                    <div class="grid grid-cols-2 gap-y-3 gap-x-2 text-sm">
+  
+                        
+                        <div class="text-gray-500">Doctor:</div>
+                        <div class="font-bold text-gray-800">Dr. <%= record.doctorId?.name || 'N/A' %></div>
+                                   <div class="text-gray-500">Department:</div>
+                        <div class="font-bold text-gray-800"><%= record.doctorId?.department || 'N/A' %></div>
+                                              <div class="text-gray-500">Date:</div>
+                        <% const d = new Date(record.date); %>
+                        <div class="font-bold text-gray-900"><%= d.getDate().toString().padStart(2, '0') %> <%= d.toLocaleString('default', { month: 'short' }) %> <%= d.getFullYear() %></div>
+                        
+             
+                    </div>
+                </div>
+            </div>
+
+            <!-- Large Prescription Medicine Body -->
+            <div class="py-8 flex-1">
+                <div class="flex items-center gap-3 mb-6 relative">
+                    <h3 class="text-3xl font-serif italic text-gray-700 font-bold tracking-tight select-none">Rx</h3>
+                    <div class="h-px bg-gray-200 flex-1 mt-3"></div>
+                </div>
+                
+                <div class="px-4">
+                    <% if (!record.medicines || record.medicines.length === 0) { %>
+                        <p class="text-gray-400 italic font-medium py-10 text-center">No medications prescribed during this session.</p>
+                    <% } else { %>
+                        <ul class="space-y-4 text-gray-700 text-lg">
+                            <% record.medicines.forEach((med) => { %>
+                                <li class="flex items-center gap-3">
+                                    <span class="text-indigo-500 font-bold text-2xl">•</span>
+                                    <div>
+                                        <span class="font-bold text-gray-900"><%= med.name %></span> 
+                                        <span class="text-gray-300 mx-2">|</span>
+                                        <span class="font-medium text-gray-600"><%= med.dosage %></span>
+                                        <span class="text-gray-300 mx-2">|</span>
+                                        <span class="font-medium text-gray-600"><%= med.instructions || med.timing || 'Standard' %></span>
+                                        <span class="text-gray-300 mx-2">|</span>
+                                        <span class="font-medium text-gray-600"><%= med.duration %></span>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } %>
+                </div>
+                
+                <% if (record.notes) { %>
+                <div class="mt-12 px-4">
+                    <h4 class="text-xs uppercase font-bold text-gray-400 mb-2 tracking-wider">Clinical Notes</h4>
+                    <p class="text-sm text-gray-600 italic"><%= record.notes %></p>
+                </div>
+                <% } %>
+            </div>
+
+            <!-- Provider Signature Footer -->
+            <div class="mt-auto pt-10 flex justify-between items-end">
+                <div class="text-xs text-gray-400">
+                    <p>Generated via Admin UI securely.</p>
+                    <p>Doc ID: <%= record._id %></p>
+                </div>
+                <div class="text-center w-48">
+                    <!-- Signature Line -->
+                    <div class="h-12 w-full border-b border-black mb-2 opacity-80 flex items-center justify-center">
+                        <span class="text-gray-200 italic font-serif text-xl select-none -mb-3 block transform -rotate-2">Sign Here</span>
+                    </div>
+                    <p class="font-bold text-gray-900">Dr. <%= record.doctorId?.name || 'N/A' %></p>
+                    <p class="text-xs text-gray-500 font-medium"><%= record.doctorId?.department || 'Medical Staff' %></p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

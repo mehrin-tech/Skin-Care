@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 font-sans antialiased text-slate-800 flex h-screen overflow-hidden">
+
+    <!-- Left Sidebar Navigation -->
+    <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col flex-shrink-0 shadow-sm">
+        <div class="h-16 flex items-center px-6 border-b border-slate-100">
+            <span class="text-xl font-bold text-teal-600 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                Skincare Clinic
+            </span>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <a href="/dashboard" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl bg-teal-50 text-teal-700">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Dashboard
+            </a>
+            <a href="/doctors" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Doctors Directory
+            </a>
+            <a href="/appointments/my" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                My Appointments
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-100">
+            <a href="/auth/logout" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-red-600 hover:bg-red-50 transition-colors">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Secure Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-full overflow-y-auto bg-slate-50/50">
+        
+        <!-- Mobile Header (Visible only on small screens) -->
+        <header class="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center shadow-sm z-10 sticky top-0">
+            <span class="text-lg font-bold text-teal-600">Skincare Clinic</span>
+            <a href="/auth/logout" class="text-sm font-medium text-red-600 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">Logout</a>
+        </header>
+
+        <div class="max-w-6xl mx-auto w-full p-4 md:p-8 space-y-6">
+
+            <!-- Mobile Navigation Quick Links -->
+            <div class="md:hidden flex space-x-2 overflow-x-auto pb-2">
+                <a href="/doctors" class="whitespace-nowrap px-4 py-2 bg-white rounded-full border border-slate-200 text-sm font-medium shadow-sm text-slate-700">Doctors List</a>
+                <a href="/appointments/book" class="whitespace-nowrap px-4 py-2 bg-teal-50 rounded-full border border-teal-100 text-sm font-medium text-teal-700">Book Visit</a>
+                <a href="/appointments/my" class="whitespace-nowrap px-4 py-2 bg-white rounded-full border border-slate-200 text-sm font-medium shadow-sm text-slate-700">Records</a>
+            </div>
+
+            <!-- Top Section: User Profile Card & Health Summary Comb Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Profile Card (Left column) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center text-center lg:col-span-1">
+                    <img src="<%= user.profileImage %>" alt="Profile" class="w-24 h-24 rounded-full border-4 border-slate-50 shadow-sm mb-4 object-cover">
+                    <h2 class="text-xl font-bold text-slate-800"><%= user.name %></h2>
+                    <p class="text-sm text-slate-500 mb-4"><%= user.email %></p>
+                    
+                    <div class="flex flex-wrap justify-center gap-2 mb-6">
+                        <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wide"><%= user.role %></span>
+                        <% if (user.gender) { %>
+                            <span class="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-semibold rounded-full tracking-wide"><%= user.gender %></span>
+                        <% } %>
+                        <% if (user.age) { %>
+                            <span class="px-3 py-1 bg-teal-50 text-teal-600 text-xs font-semibold rounded-full tracking-wide"><%= user.age %> yrs</span>
+                        <% } %>
+                    </div>
+                    
+                    <a href="/profile/edit" class="w-full mt-auto px-4 py-2 border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 rounded-lg text-sm font-medium transition shadow-sm">Edit Profile</a>
+                    <!-- <button class="w-full mt-auto px-4 py-2 border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 rounded-lg text-sm font-medium transition shadow-sm">
+                        Edit Profile (Coming Soon)
+                    </button> -->
+                </div>
+
+                <!-- Health Stats & Categories (Right columns) -->
+                <div class="lg:col-span-2 flex flex-col gap-6">
+                    
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 h-max">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col hover:border-slate-300 transition">
+                            <span class="text-slate-500 text-sm font-medium mb-1">Total Visits</span>
+                            <span class="text-3xl font-bold text-slate-800"><%= stats.total %></span>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col border-t-4 border-t-teal-500 hover:shadow-md transition">
+                            <span class="text-slate-500 text-sm font-medium mb-1">Upcoming</span>
+                            <span class="text-3xl font-bold text-teal-600"><%= stats.upcoming %></span>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col border-t-4 border-t-indigo-500 hover:shadow-md transition overflow-hidden">
+                            <span class="text-slate-500 text-sm font-medium mb-1">Last Checked In</span>
+                            <span class="text-xl font-bold text-indigo-600 whitespace-nowrap"><%= stats.lastVisit ? new Date(stats.lastVisit).toLocaleDateString() : 'None Yet' %></span>
+                        </div>
+                    </div>
+
+                    <!-- Category Cards Section -->
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-4">Browse Departments</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <a href="/doctors?department=Hair" class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md hover:border-teal-200 transition group text-center flex flex-col items-center">
+                                <div class="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform shadow-inner">✂️</div>
+                                <span class="font-semibold text-slate-800 text-sm">Hair Care</span>
+                            </a>
+                            <a href="/doctors?department=Skin" class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md hover:border-teal-200 transition group text-center flex flex-col items-center">
+                                <div class="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform shadow-inner">✨</div>
+                                <span class="font-semibold text-slate-800 text-sm">Skin Care</span>
+                            </a>
+                            <a href="/doctors?department=Dentistry" class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md hover:border-teal-200 transition group text-center flex flex-col items-center">
+                                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform shadow-inner">🦷</div>
+                                <span class="font-semibold text-slate-800 text-sm">Dentistry</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointments Table Section -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mt-6">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Recent Activity
+                    </h3>
+                    <!-- <a href="/appointments/my" class="text-sm font-medium text-teal-600 hover:text-teal-700 bg-teal-50 px-3 py-1 rounded-lg border border-transparent hover:border-teal-200 transition">View All &rarr;</a> -->
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-slate-200">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Doctor</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Department</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Date & Time</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                    
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-slate-100">
+                            <% if (recentAppointments && recentAppointments.length > 0) { %>
+                                <% recentAppointments.forEach(appt => { %>
+                                    <% const isPast = new Date(appt.date) < new Date(); %>
+                                    <tr class="hover:bg-slate-50 transition duration-150">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex items-center">
+                                                <div class="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600 text-xs mr-3"><%= appt.doctorId.name.charAt(0) %></div>
+                                                <div class="font-medium text-sm text-slate-900 border-b border-transparent">Dr. <%= appt.doctorId.name %></div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+                                                <%= appt.doctorId.department %>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"><%= new Date(appt.date).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <% if (isPast) { %>
+                                                <span class="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 shadow-sm border border-slate-200">Completed</span>
+                                            <% } else { %>
+                                                <span class="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 shadow-sm border border-teal-200 animate-pulse-slow">Upcoming</span>
+                                            <% } %>
+                                        </td>
+                                       
+                                    </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4" class="px-6 py-12 text-center text-sm text-slate-500">
+                                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-100 mb-3">
+                                            <svg class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                        </div>
+                                        <p>No recent appointments logged.</p>
+                                        <a href="/appointments/book" class="inline-block mt-2 px-4 py-2 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition">Book your first visit</a>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    
+</body>
+</html>

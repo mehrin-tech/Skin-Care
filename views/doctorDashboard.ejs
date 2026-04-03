@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-indigo-50 min-h-screen p-4 md:p-8 font-sans">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">Doctor Access Portal</h1>
+                <p class="text-slate-500 mt-1">Logged in strictly as <strong class="text-blue-600"><%= user.name %></strong> (Medical Specialist)</p>
+            </div>
+            <form action="/auth/logout" method="GET" class="mt-4 md:mt-0">
+                <button type="submit" class="px-5 py-2.5 bg-slate-800 text-white hover:bg-slate-900 font-medium rounded-lg transition duration-150 shadow-sm border border-transparent">
+                    Secure Log Out
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center flex flex-col items-center">
+            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl mb-4 shadow-inner">🩺</div>
+            <h2 class="text-xl font-bold text-slate-800 mb-2">Welcome to your Clinical Workspace!</h2>
+            <p class="text-slate-500 max-w-md mx-auto">This dedicated portal allows you exclusively to filter through personal patient appointments, edit your public directory parameters, and interact directly with system tracking logs securely avoiding standard interface noise.</p>
+            
+            <a href="/doctors" class="mt-8 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm border border-transparent transition inline-flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Return to Search Directory
+            </a>
+        </div>
+    </div>
+</body>
+</html>

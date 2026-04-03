@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .animate-fade-in-up {
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 h-screen overflow-hidden flex flex-col">
+
+    <!-- Top Navigation -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center px-6 shrink-0 shadow-sm relative z-10 w-full">
+        <a href="/doctor/dashboard" class="text-teal-600 hover:text-teal-800 flex items-center gap-2 font-bold text-sm bg-teal-50 px-4 py-2 rounded-xl transition-all hover:pr-5 border border-transparent hover:border-teal-100">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Dashboard
+        </a>
+        <div class="ml-auto font-black text-lg text-slate-800 flex items-center gap-2">
+            Clinical Consultation
+            <% if (appointment.status === 'completed') { %>
+                <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-md uppercase tracking-wider ml-2 font-bold shadow-sm border border-emerald-200">Completed</span>
+            <% } else { %>
+                <span class="bg-amber-100 text-amber-700 text-xs px-2.5 py-1 rounded-md uppercase tracking-wider ml-2 font-bold animate-pulse shadow-sm border border-amber-200">In Progress</span>
+            <% } %>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden w-full relative">
+        
+        <!-- Left Column: Patient Sheet & Prescription Form -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 flex justify-center bg-gray-100">
+            <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full p-6 md:p-10 border border-gray-200">
+                
+                <!-- Clinical Header -->
+                <div class="flex justify-between items-start border-b-2 border-teal-600 pb-5 mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-teal-100 text-teal-700 flex items-center justify-center rounded-xl shadow-inner border border-teal-200 shrink-0">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-black text-gray-900 tracking-tight">SkinCare Clinical Sheet</h1>
+                            <p class="text-gray-500 text-sm mt-0.5 font-bold">Provider: Dr. <%= appointment.doctorId?.name %></p>
+                            <p class="text-gray-400 text-xs font-medium">Department: <%= appointment.doctorId?.department %></p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <% const d = new Date(appointment.date); %>
+                        <h2 class="text-lg font-bold text-teal-800 uppercase tracking-widest hidden sm:block">Encounter</h2>
+                        <p class="text-gray-900 font-black text-md mt-1"><%= d.toLocaleDateString() %></p>
+                        <p class="text-gray-500 font-mono text-xs">Ref: TCK-<%= appointment.tokenNumber || appointment._id.toString().slice(-6) %></p>
+                    </div>
+                </div>
+
+                <!-- Patient Demographics -->
+                <div class="bg-slate-50/50 rounded-xl p-5 border border-slate-200 mb-8 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+                    <h3 class="text-xs uppercase font-black text-slate-400 mb-4 tracking-wider">Patient Demographics</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-y-5 gap-x-4 text-sm">
+                        <div>
+                            <span class="text-teal-400 block text-[10px] uppercase tracking-widest font-black mb-1">Full Name</span>
+                            <strong class="text-gray-900 text-base block truncate" title="<%= appointment.userId?.name || 'N/A' %>"><%= appointment.userId?.name || 'N/A' %></strong>
+                        </div>
+                        <div>
+                            <span class="text-teal-400 block text-[10px] uppercase tracking-widest font-black mb-1">Mobile Vector</span>
+                            <strong class="text-gray-800"><%= appointment.userId?.phoneNumber || 'N/A' %></strong>
+                        </div>
+                        <div>
+                            <span class="text-teal-400 block text-[10px] uppercase tracking-widest font-black mb-1">Biological Metrics</span>
+                            <strong class="text-gray-800"><%= appointment.userId?.age || '--' %> y.o. <span class="text-gray-300 mx-1">|</span> <span class="text-gray-600 font-medium"><%= appointment.userId?.gender || 'N/A' %></span></strong>
+                        </div>
+                        <div>
+                            <span class="text-teal-400 block text-[10px] uppercase tracking-widest font-black mb-1">Residence Block</span>
+                            <strong class="text-gray-800"><%= appointment.userId?.place || 'N/A' %></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prescription Section -->
+                <div>
+                    <div class="flex items-center gap-3 mb-6 relative">
+                        <h3 class="text-4xl font-serif italic text-gray-800 font-bold tracking-tight select-none">Rx</h3>
+                        <div class="h-0.5 bg-gray-200 flex-1 mt-3 rounded-full"></div>
+                    </div>
+
+                    <% if (appointment.status === 'completed') { %>
+                        <!-- Read Only View -->
+                        <% if (!appointment.medicines || appointment.medicines.length === 0) { %>
+                            <p class="text-slate-400 italic font-medium py-10 text-center bg-slate-50 rounded-xl border border-slate-100 shadow-sm border-dashed">No medications mapped during this specific clinical session.</p>
+                        <% } else { %>
+                            <div class="space-y-4 px-2 sm:px-4">
+                                <% appointment.medicines.forEach((med, index) => { %>
+                                    <div class="flex flex-col sm:flex-row gap-4 bg-white border border-gray-200 rounded-xl p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] relative overflow-hidden transition-all hover:bg-slate-50">
+                                        <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-teal-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]"></div>
+                                        <div class="flex-1">
+                                            <h4 class="font-black text-gray-900 text-lg sm:text-xl"><%= med.name %></h4>
+                                            <p class="text-teal-600 font-bold text-sm mt-1 uppercase tracking-wide"><%= med.dosage %> <span class="text-gray-300 mx-2">&bull;</span> <%= med.duration %></p>
+                                        </div>
+                                        <div class="flex-1 sm:text-right flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-gray-100 pt-3 sm:pt-0 sm:pl-4 mt-1 sm:mt-0">
+                                            <p class="text-[10px] uppercase font-black tracking-widest text-gray-400 mb-1">Clinical Instructions</p>
+                                            <p class="text-gray-700 italic text-sm font-medium"><%= med.instructions || 'Standard Admin Protocol applies natively.' %></p>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        <% } %>
+
+                    <% } else { %>
+                        <!-- Interactive Form View -->
+                        <form id="rxForm" class="space-y-6">
+                            
+                            <div id="medicineList" class="space-y-4">
+                                <!-- First Medicine Row -->
+                                <div class="med-row flex flex-col items-start gap-4 p-5 bg-slate-50/70 rounded-2xl border border-slate-200 relative group transition-all shadow-sm">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 w-full">
+                                        <div class="md:col-span-12 lg:col-span-5">
+                                            <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Medicine Name *</label>
+                                            <input type="text" name="medicines[0][name]" required placeholder="E.g. Amoxicillin 500mg" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:font-medium placeholder:text-gray-300">
+                                        </div>
+                                        <div class="md:col-span-6 lg:col-span-3">
+                                            <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Dosage</label>
+                                            <input type="text" name="medicines[0][dosage]" placeholder="e.g. 1-0-1" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:font-medium placeholder:text-gray-300">
+                                        </div>
+                                        <div class="md:col-span-6 lg:col-span-4">
+                                            <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Duration</label>
+                                            <input type="text" name="medicines[0][duration]" placeholder="e.g. 5 Days" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:font-medium placeholder:text-gray-300">
+                                        </div>
+                                        <div class="md:col-span-12">
+                                            <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Instructions</label>
+                                            <input type="text" name="medicines[0][instructions]" placeholder="e.g. Take strictly after meals..." class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold text-gray-600 focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all shadow-inner placeholder:font-medium placeholder:text-gray-300">
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="removeRow(this)" class="absolute -right-3 -top-3 bg-white border border-red-200 text-red-500 hover:bg-red-500 hover:text-white rounded-full p-1.5 shadow-md md:opacity-0 group-hover:opacity-100 transition-all z-10">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="addMedRow()" class="flex items-center justify-center gap-2 text-teal-700 font-bold hover:text-teal-900 transition-all text-sm bg-teal-50 hover:bg-teal-100 px-6 py-3 rounded-xl border border-teal-200 border-dashed w-full sm:w-auto mx-auto sm:mx-0 shadow-sm active:scale-95">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                                Add Another Medicine
+                            </button>
+
+                            <div class="pt-8 mt-4 border-t border-slate-200 flex flex-col sm:flex-row justify-end gap-4 relative">
+                                <button type="submit" id="saveRxBtn" class="bg-gray-900 hover:bg-teal-600 text-white px-8 py-3.5 rounded-xl font-black shadow-xl shadow-gray-200/50 hover:shadow-teal-300/50 transition-all active:scale-95 flex items-center justify-center gap-2 overflow-hidden relative group">
+                                    <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
+                                    <span class="relative">Sign & Save Prescription</span>
+                                    <svg class="w-5 h-5 mx-1 relative transform transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                </button>
+                            </div>
+                        </form>
+                    <% } %>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Patient History Timeline (Always visible on large screens) -->
+        <aside class="w-80 lg:w-96 bg-slate-50 border-l border-slate-200 hidden md:flex flex-col flex-shrink-0 z-0">
+            <div class="h-16 flex items-center px-6 border-b border-slate-200 bg-white/80 backdrop-blur-md shrink-0">
+                <span class="font-black text-slate-800 tracking-wider uppercase text-xs flex items-center gap-2">
+                    <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Consultation History
+                </span>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <% if (!history || history.length === 0) { %>
+                    <div class="text-center py-12 px-4">
+                        <div class="bg-slate-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-inner">
+                            <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </div>
+                        <p class="text-sm font-bold text-slate-800">No Historical Records</p>
+                        <p class="text-xs font-medium text-slate-500 mt-1">This patient does not have any previously completed encounters mapped in the global arrays natively.</p>
+                    </div>
+                <% } else { %>
+                    <div class="relative border-l-2 border-teal-200 ml-4 space-y-8 mt-2 my-10">
+                        <% history.forEach((hist, idx) => { %>
+                            <div class="relative pl-6 hover:-translate-y-0.5 transition-transform group">
+                                <div class="absolute w-4 h-4 bg-teal-500 rounded-full -left-[9px] top-1 border-4 border-slate-50 shadow-sm group-hover:scale-125 transition-transform"></div>
+                                <% const hd = new Date(hist.date); %>
+                                <p class="text-xs font-black text-teal-600 mb-1.5 tracking-wider uppercase"><%= hd.toLocaleDateString() %></p>
+                                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/60 relative hover:border-teal-300 transition-colors">
+                                    <p class="font-black text-slate-900 text-sm tracking-tight"><%= hist.doctorId?.department %></p>
+                                    <p class="text-xs font-bold text-slate-500 mt-0.5">Dr. <%= hist.doctorId?.name %></p>
+                                    
+                                    <% if(hist.medicines && hist.medicines.length > 0) { %>
+                                        <div class="mt-4 bg-slate-50/80 p-3 rounded-lg text-xs border border-slate-100 shadow-inner">
+                                            <p class="font-bold text-slate-400 uppercase tracking-widest text-[9px] mb-1.5 flex items-center gap-1.5">
+                                                <svg class="w-3 h-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                                Medicines (<%= hist.medicines.length %>)
+                                            </p>
+                                            <ul class="list-disc list-inside text-slate-600 font-medium space-y-0.5 marker:text-slate-300">
+                                                <% hist.medicines.forEach(m => { %>
+                                                    <li class="truncate" title="<%= m.name %>"><%= m.name %></li>
+                                                <% }) %>
+                                            </ul>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } %>
+            </div>
+        </aside>
+
+    </main>
+
+    <script>
+        let rowCount = 1;
+
+        function addMedRow() {
+            const list = document.getElementById('medicineList');
+            const newRow = document.createElement('div');
+            newRow.className = 'med-row flex flex-col items-start gap-4 p-5 bg-slate-50/70 rounded-2xl border border-slate-200 relative group transition-all animate-fade-in-up shadow-sm';
+            
+            newRow.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-5 w-full">
+                    <div class="md:col-span-12 lg:col-span-5">
+                        <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Medicine Name *</label>
+                        <input type="text" name="medicines[${rowCount}][name]" required placeholder="E.g. Amoxicillin 500mg" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:font-medium placeholder:text-gray-300">
+                    </div>
+                    <div class="md:col-span-6 lg:col-span-3">
+                        <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Dosage</label>
+                        <input type="text" name="medicines[${rowCount}][dosage]" placeholder="e.g. 1-0-1" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:font-medium placeholder:text-gray-300">
+                    </div>
+                    <div class="md:col-span-6 lg:col-span-4">
+                        <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Duration</label>
+                        <input type="text" name="medicines[${rowCount}][duration]" placeholder="e.g. 5 Days" class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder:font-medium placeholder:text-gray-300">
+                    </div>
+                    <div class="md:col-span-12">
+                        <label class="block text-[10px] font-black tracking-widest text-slate-500 uppercase mb-1.5">Instructions</label>
+                        <input type="text" name="medicines[${rowCount}][instructions]" placeholder="e.g. Take strictly after meals..." class="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 font-bold text-gray-600 focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all shadow-inner placeholder:font-medium placeholder:text-gray-300">
+                    </div>
+                </div>
+                <button type="button" onclick="removeRow(this)" class="absolute -right-3 -top-3 bg-white border border-red-200 text-red-500 hover:bg-red-500 hover:text-white rounded-full p-1.5 shadow-md md:opacity-0 group-hover:opacity-100 transition-all z-10">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            `;
+            list.appendChild(newRow);
+            rowCount++;
+        }
+
+        function removeRow(btn) {
+            const rows = document.querySelectorAll('.med-row');
+            if (rows.length > 1) {
+                btn.closest('.med-row').remove();
+            } else {
+                alert("Clinical sequences require at least a single medication field globally natively.");
+            }
+        }
+
+        const form = document.getElementById('rxForm');
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('saveRxBtn');
+                btn.innerHTML = `<svg class="animate-spin w-5 h-5 mx-auto" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>`;
+                btn.disabled = true;
+
+                // Restructure FormData structurally into URLSearchParams matching Express encoded mappings
+                const formData = new URLSearchParams(new FormData(form));
+
+                try {
+                    const req = await fetch('/doctor/prescription/<%= appointment._id %>', {
+                        method: 'POST',
+                        body: formData 
+                    });
+                    const res = await req.json();
+                    
+                    if (res.success) {
+                        // Flash success animation securely switching states natively explicitly 
+                        window.location.href = res.redirect;
+                    } else {
+                        alert(res.error || "Failed to commit clinical sequence.");
+                        btn.disabled = false;
+                        btn.textContent = "Sign & Save Prescription";
+                    }
+                } catch(e) {
+                    alert('System networking exception processing clinical updates.');
+                    btn.disabled = false;
+                    btn.innerHTML = `Sign & Save Prescription <svg class="w-5 h-5 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
